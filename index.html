@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // Main App component
 const App = () => {
+  // State for form inputs
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
   // Navigation items in Portuguese
   const navItems = [
     { name: 'Início', href: '#home' },
@@ -60,6 +65,25 @@ const App = () => {
         { title: 'Visas para extranjeros', description: 'Asesoramiento completo para varios tipos de visas, garantizando su estancia legal en el país.', icon: serviceIcons.visas, linkText: 'Leer más' },
       ],
     },
+  };
+  
+  // Function to handle WhatsApp redirection
+  const handleWhatsAppRedirect = () => {
+    const phoneNumber = '5548996400540';
+    const text = `Olá, meu nome é ${name} (Email: ${email}).\n\nMensagem:\n${message}`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
+  // Function to handle Telegram redirection
+  const handleTelegramRedirect = () => {
+    const phoneNumber = '5548996400540'; // Phone number for Telegram link
+    const text = `Olá, meu nome é ${name} (Email: ${email}).\n\nMensagem:\n${message}`;
+    // Note: Telegram direct message links (t.me) don't pre-fill text for phone numbers, 
+    // but this will open a chat with the user if they exist.
+    // The share URL is a more universal fallback.
+    const url = `https://t.me/share/url?url=&text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -187,7 +211,7 @@ const App = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">Entre em Contato</h2>
           <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-            <form className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                 <input
@@ -196,6 +220,8 @@ const App = () => {
                   name="name"
                   className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Seu nome"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div>
@@ -206,6 +232,8 @@ const App = () => {
                   name="email"
                   className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Seu email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div>
@@ -216,17 +244,27 @@ const App = () => {
                   rows="4"
                   className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Sua mensagem"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                 ></textarea>
               </div>
-              <div className="text-center">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
                 <button
-                  type="submit"
-                  className="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-lg font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition duration-300 hover:scale-105"
+                  onClick={handleWhatsAppRedirect}
+                  className="inline-flex items-center justify-center w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-lg font-medium rounded-full text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transform transition duration-300 hover:scale-105"
                 >
-                  Enviar Mensagem
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="mr-2"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.487 5.235 3.487 8.413 0 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.287.468-1.03 3.779 3.824-1.003.478.282z"/></svg>
+                  Enviar via WhatsApp
+                </button>
+                <button
+                  onClick={handleTelegramRedirect}
+                  className="inline-flex items-center justify-center w-full sm:w-auto py-3 px-6 border border-transparent shadow-sm text-lg font-medium rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition duration-300 hover:scale-105"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="mr-2"><path d="M9.78 18.25l-2.92-2.92c-.39-.39-1.02-.39-1.41 0s-.39 1.02 0 1.41l3.62 3.62c.39.39 1.02.39 1.41 0l7.25-7.25c.39-.39.39-1.02 0-1.41s-1.02-.39-1.41 0L9.78 18.25zM22 2L2 9.25l7.25 2.19L11.69 19 22 2z"/></svg>
+                  Enviar via Telegram
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </section>
